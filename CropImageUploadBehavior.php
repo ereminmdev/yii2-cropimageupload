@@ -71,13 +71,13 @@ class CropImageUploadBehavior extends UploadImageBehavior
     {
         parent::beforeSave();
 
-        $this->cropped_field = $this->owner->getAttribute($this->attribute) instanceof UploadedFile ? $this->cropped_field : '';
+        /** @var ActiveRecord $model */
+        $model = $this->owner;
+
+        $this->cropped_field = $model->getAttribute($this->attribute) instanceof UploadedFile ? $this->cropped_field : '';
 
         if ($this->crop_changed && !empty($this->cropped_field)) {
             $this->delete($this->cropped_field, true);
-
-            /** @var ActiveRecord $model */
-            $model = $this->owner;
 
             $name = $model->getAttribute($this->attribute);
 

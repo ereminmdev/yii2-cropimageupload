@@ -17,16 +17,16 @@ class CropImageUploadWidget extends InputWidget
      * Please refer to the jCrop Web page for possible options.
      * @see http://jcrop.org/doc/options
      */
-    public $clientOptions = ['boxWidth' => 450, 'boxHeight' => 400];
+    public $clientOptions = [];
     /**
      * @var string crop ratio
      * format is width:height where width and height are both floats
-     * if empty and has model, will be got from CropImageBehavior
+     * if empty and has model, will be got from CropImageUploadBehavior
      */
     public $ratio;
     /**
      * @var string attribute name storing crop value or crop value itself if no model
-     * if empty and has model, will be got from CropImageBehavior
+     * if empty and has model, will be got from CropImageUploadBehavior
      * crop value has topLeftX-topLeftY-width-height format where all variables are float
      * all coordinates are in percents of corresponded image dimension
      */
@@ -40,7 +40,7 @@ class CropImageUploadWidget extends InputWidget
     public $crop_value;
     /**
      * @var string url where uploaded files are stored
-     * if empty and has model, will be got from CropImageBehavior
+     * if empty and has model, will be got from CropImageUploadBehavior
      */
     public $url;
     /**
