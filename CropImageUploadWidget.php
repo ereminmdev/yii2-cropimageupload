@@ -2,6 +2,7 @@
 
 namespace ereminmdev\yii2\cropimageupload;
 
+use Yii;
 use yii\helpers\Html;
 use yii\widgets\InputWidget;
 
@@ -43,10 +44,6 @@ class CropImageUploadWidget extends InputWidget
      * if empty and has model, will be got from CropImageUploadBehavior
      */
     public $url;
-    /**
-     * @var string css class of container that stores image crop
-     */
-    public $crop_class = 'crop_medium';
 
     /**
      * @inheritdoc
@@ -95,7 +92,11 @@ class CropImageUploadWidget extends InputWidget
         }
 
         if ($this->url) {
-            $this->url = \Yii::getAlias($this->url);
+            $this->url = Yii::getAlias($this->url);
+        }
+
+        if ($this->ratio && !isset($this->clientOptions['aspectRatio'])) {
+            $this->clientOptions['aspectRatio'] = $this->ratio;
         }
 
         $jsOptions = [
@@ -105,7 +106,6 @@ class CropImageUploadWidget extends InputWidget
             'url' => $this->url,
             'clientOptions' => $this->clientOptions,
             'is_crop_prev' => ($crop_id || !$this->hasModel()) ? false : true,
-            'crop_class' => $this->crop_class,
         ];
 
         $this->registerPlugin($jsOptions);

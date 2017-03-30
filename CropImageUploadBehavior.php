@@ -6,6 +6,7 @@ use Imagine\Image\Box;
 use Imagine\Image\Point;
 use mongosoft\file\UploadImageBehavior;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 use yii\imagine\Image;
 use yii\web\UploadedFile;
 
@@ -113,14 +114,12 @@ class CropImageUploadBehavior extends UploadImageBehavior
         ini_set('memory_limit', '512M');
 
         $image = Image::getImagine()->open($path);
-        $crop = explode('-', $this->crop_value);
-
         $size = $image->getSize();
-        foreach ($crop as $ind => $cr) {
-            $crop[$ind] = round($crop[$ind] * ($ind % 2 == 0 ? $size->getWidth() : $size->getHeight()) / 100);
-        }
 
-        $image->crop(new Point($crop[0], $crop[1]), new Box($crop[2] - $crop[0], $crop[3] - $crop[1]))->save($save_path);
+        $crop = json_decode($this->crop_value, true);
+        $crop = ArrayHelper::merge(['x' => 0, 'y' => 0, 'x2' => $size->getWidth(), 'y2' => $size->getHeight()], (array)$crop);
+
+        $image->crop(new Point($crop['x'], $crop['y']), new Box($crop['x2'] - $crop['x'], $crop['y2'] - $crop['y']))->save($save_path);
     }
 
     /**

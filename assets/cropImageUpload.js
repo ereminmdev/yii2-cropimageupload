@@ -1,87 +1,84 @@
+'use strict';
+
 (function ($) {
-    $.fn.cropImageUpload = function (method) {
-        var data = $(this).data('ciu');
-        if (data) {
-            if (typeof data[method] == 'function') {
-                data[method].apply(this, Array.prototype.slice.call(arguments, 1));
-            }
-            return $(this);
-        }
 
-        var ciu = function (_obj, config) {
-            _obj.on('change', function () {
-                var file = this.files[0];
-                var fr = new FileReader();
-                fr.onload = function () {
-                    _obj.cropImageUpload('image', fr.result);
-                };
-                fr.readAsDataURL(file);
-                return false;
-            });
+    // jquery plugin for jcrop (http://jcrop.org)
+    $.fn.cropImageUpload = function (options) {
+        var defaults = {
+            cropInputId: '',
 
-            var _crop_store = config.crop_id ? $('#' + config.crop_id) : (config.is_crop_prev ? _obj.prev() : null);
-            var _image_store = $('<div>', {'class': 'crop-image-upload-container'}).insertAfter(_obj);
+            wrapperTag: 'div',
+            wrapperAttrs: {
+                class: 'crop-image-upload-container'
+            },
+            wrapperCSS: {},
 
-            if (config.crop_class) {
-                _image_store.addClass(config.crop_class);
-            }
+            imageTag: 'img',
+            imageAttrs: {
+                class: 'img-responsive'
+            },
+            imageCSS: {},
 
-            this.image = function (src, first_time) {
-                _image_store.html('<img>');
-                $('img', _image_store).attr('src', (config.url && first_time) ? config.url + '/' + src : src);
-                if (first_time) $('img', _image_store).hide();
-
-                if (config.crop_value || !first_time) {
-                    var $cropImage = $('img', _image_store);
-                    var cropImageW = $cropImage.width();
-                    var cropImageH = $cropImage.height();
-
-                    var crop_value = (config.crop_value && config.crop_value != '') ? config.crop_value : '0-0-100-100';
-
-                    config.clientOptions['boxWidth'] = (config.clientOptions['boxWidth'] && config.clientOptions['boxWidth'] != '') ?
-                        Math.min(_image_store.outerWidth(), Number(config.clientOptions['boxWidth'])) : _image_store.outerWidth();
-
-                    function percent(val, main) {
-                        return Number((val * 100 / main).toFixed(2));
-                    }
-
-                    var storeCropParams = function (c) {
-                        if (_crop_store) {
-                            _crop_store.val(percent(c.x, cropImageW) + '-' + percent(c.y, cropImageH) + '-' + percent(c.x2, cropImageW) + '-' + percent(c.y2, cropImageH));
-                        }
-                    };
-
-                    var cropParams = config.clientOptions ? config.clientOptions : {};
-
-                    if (config.ratio) {
-                        cropParams.aspectRatio = config.ratio;
-                    }
-
-                    var pp = crop_value.split('-');
-                    pp[0] = pp[0] * cropImageW / 100;
-                    pp[1] = pp[1] * cropImageH / 100;
-                    pp[2] = pp[2] * cropImageW / 100;
-                    pp[3] = pp[3] * cropImageH / 100;
-                    cropParams.setSelect = pp;
-
-                    $cropImage.Jcrop(cropParams);
-                    $cropImage.Jcrop('api').container.on('cropmove', function (e, s, c) {
-                        storeCropParams(c);
-                    });
-                }
-            };
-
-            if (_obj.is('[value]') && _obj.attr('value') != '') {
-                this.image(_obj.attr('value'), true);
-                //hack for Yii to send old file name for validation
-                if (config.crop_id && _obj.prev().attr('name') == _obj.attr('name')) {
-                    _obj.prev().val(_obj.attr('value'));
-                }
-            }
+            clientOptions: []
         };
 
-        $(this).data('ciu', new ciu($(this), method));
+        var settings = $.extend(true, {}, defaults, options);
 
-        return $(this);
+        return this.each(function () {
+            var realWidth, realHeight;
+
+            var $input = $(this);
+            var $cropInput = settings.cropInputId != '' ? $('#' + settings.cropInputId) : $input.prev();
+
+            var $wrapper = $('<' + settings.wrapperTag + '/>').attr(settings.wrapperAttrs).css(settings.wrapperCSS);
+            $wrapper.insertAfter($input);
+
+            // fire when crop coordinates changed
+            var updateCropCoordinates = function (coordinates) {
+                $cropInput.val(JSON.stringify(coordinates));
+            };
+
+            // fire when new image select in input
+            var changeImage = function (src) {
+                var $image = $('<' + settings.imageTag + '/>')
+                    .attr('src', src)
+                    .one('load', function () {
+                        $image.appendTo($wrapper.empty());
+
+                        realWidth = $image.width();
+                        realHeight = $image.height();
+
+                        $image.attr(settings.imageAttrs).css(settings.imageCSS);
+
+                        $image.css({
+                            width: (Math.min(realWidth, $wrapper.width()) - 1) + 'px'
+                        });
+
+                        var clientOptions = settings.clientOptions;
+                        clientOptions.boxWidth = $image.outerWidth();
+                        clientOptions.boxHeight = $image.outerHeight();
+                        clientOptions.setSelect = $.extend({}, clientOptions.setSelect, [0, 0, realWidth, realHeight]);
+
+                        $image.Jcrop(clientOptions);
+                        $image.Jcrop('api').container.on('cropend', function (event, selection, coordinates) {
+                            updateCropCoordinates(coordinates);
+                        });
+                    });
+            };
+
+            $input.on('change', function () {
+                var file = this.files[0];
+                var reader = new FileReader();
+
+                reader.onloadend = function () {
+                    changeImage(reader.result);
+                };
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
     };
+
 }(jQuery));
