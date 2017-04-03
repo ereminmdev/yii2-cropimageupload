@@ -110,9 +110,17 @@ class CropImageUploadBehavior extends UploadImageBehavior
      */
     public function getImageUrl($attribute, $thumb = 'thumb')
     {
-        $owner = $this->owner;
-        $behavior = $owner->getBehavior($attribute);
-        return (($behavior !== null) && ($behavior instanceof self)) ? $behavior->getThumbUploadUrl($attribute, $thumb) : $this->getThumbUploadUrl($attribute, $thumb);
+        if ($this->attribute == $attribute) {
+            return $this->getThumbUploadUrl($attribute, $thumb);
+        } else {
+            $owner = $this->owner;
+            foreach ($owner->getBehaviors() as $behavior) {
+                if (($behavior instanceof self) && ($behavior->attribute == $attribute)) {
+                    return $behavior->getThumbUploadUrl($attribute, $thumb);
+                }
+            }
+        }
+        return $this->getPlaceholderUrl();
     }
 
     /**
