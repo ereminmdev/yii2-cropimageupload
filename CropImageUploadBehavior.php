@@ -36,6 +36,7 @@ class CropImageUploadBehavior extends UploadImageBehavior
     protected $crop_value;
     protected $crop_changed;
 
+
     /**
      * @inheritdoc
      */
@@ -100,6 +101,18 @@ class CropImageUploadBehavior extends UploadImageBehavior
         }
 
         parent::afterUpload();
+    }
+
+    /**
+     * @param string $attribute
+     * @param string $thumb
+     * @return string
+     */
+    public function getImageUrl($attribute, $thumb = 'thumb')
+    {
+        $owner = $this->owner;
+        $behavior = $owner->getBehavior($attribute);
+        return (($behavior !== null) && ($behavior instanceof self)) ? $behavior->getThumbUploadUrl($attribute, $thumb) : $this->getThumbUploadUrl($attribute, $thumb);
     }
 
     /**
