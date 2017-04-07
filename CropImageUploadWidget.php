@@ -100,12 +100,12 @@ class CropImageUploadWidget extends InputWidget
         }
 
         $jsOptions = [
-            'crop_value' => $this->crop_value,
-            'crop_id' => $crop_id,
+            'cropValue' => $this->crop_value,
+            'cropInputId' => $crop_id,
             'ratio' => $this->ratio,
             'url' => $this->url,
             'clientOptions' => $this->clientOptions,
-            'is_crop_prev' => ($crop_id || !$this->hasModel()) ? false : true,
+            'isCropPrev' => ($crop_id || !$this->hasModel()) ? false : true,
         ];
 
         $this->registerPlugin($jsOptions);

@@ -6,6 +6,8 @@
     $.fn.cropImageUpload = function (options) {
         var defaults = {
             cropInputId: '',
+            cropValue: '',
+            isCropPrev: true,
 
             wrapperTag: 'div',
             wrapperAttrs: {
@@ -28,7 +30,7 @@
             var realWidth, realHeight;
 
             var $input = $(this);
-            var $cropInput = settings.cropInputId != '' ? $('#' + settings.cropInputId) : $input.prev();
+            var $cropInput = (!settings.isCropPrev && (settings.cropInputId !== '')) ? $('#' + settings.cropInputId) : $input.prev();
 
             var $wrapper = $('<' + settings.wrapperTag + '/>').attr(settings.wrapperAttrs).css(settings.wrapperCSS);
             $wrapper.insertAfter($input);
