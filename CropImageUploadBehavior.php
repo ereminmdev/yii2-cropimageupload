@@ -105,22 +105,26 @@ class CropImageUploadBehavior extends UploadImageBehavior
 
     /**
      * @param string $attribute
-     * @param string $thumb
+     * @param string|false $thumb
+     * @param string $placeholderUrl
      * @return string
      */
-    public function getImageUrl($attribute, $thumb = 'thumb')
+    public function getImageUrl($attribute, $thumb = 'thumb', $placeholderUrl = '')
     {
-        if ($this->attribute == $attribute) {
-            return $this->getThumbUploadUrl($attribute, $thumb);
+        $behavior = $this->findImageBehavior($attribute);
+        if ($behavior !== null) {
+            if ($thumb !== false) {
+                return $behavior->getThumbUploadUrl($attribute, $thumb);
+            } else {
+                return $behavior->getUploadUrl($attribute);
+            }
         } else {
-            $owner = $this->owner;
-            foreach ($owner->getBehaviors() as $behavior) {
-                if (($behavior instanceof self) && ($behavior->attribute == $attribute)) {
-                    return $behavior->getThumbUploadUrl($attribute, $thumb);
-                }
+            if ($thumb !== false) {
+                return $this->getPlaceholderUrl($thumb);
+            } else {
+                return $placeholderUrl;
             }
         }
-        return $this->getPlaceholderUrl();
     }
 
     /**
@@ -150,5 +154,24 @@ class CropImageUploadBehavior extends UploadImageBehavior
     protected function getCropFileName($filename)
     {
         return uniqid() . '_' . $filename;
+    }
+
+    /**
+     * @param string $attribute
+     * @return self|null
+     */
+    public function findImageBehavior($attribute)
+    {
+        if ($this->attribute == $attribute) {
+            return $this;
+        } else {
+            $owner = $this->owner;
+            foreach ($owner->getBehaviors() as $behavior) {
+                if (($behavior instanceof self) && ($behavior->attribute == $attribute)) {
+                    return $behavior;
+                }
+            }
+        }
+        return null;
     }
 }
