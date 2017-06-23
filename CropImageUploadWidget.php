@@ -45,6 +45,22 @@ class CropImageUploadWidget extends InputWidget
      */
     public $url;
 
+
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        parent::init();
+
+        $form = $this->field->form;
+        if (!isset($form->options['enctype'])) {
+            $form->options['enctype'] = 'multipart/form-data';
+        }
+
+        $this->options['accept'] = 'image/*';
+    }
+
     /**
      * @inheritdoc
      */

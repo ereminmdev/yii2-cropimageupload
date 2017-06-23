@@ -3,6 +3,7 @@
   "description": "Crop image upload for Yii framework.",
   "keywords": ["yii2","behavior","image upload","crop"],
   "homepage": "https://bitbucket.org/ereminmdev/yii2-cropimageupload",
+  "type": "yii2-extension",
   "license": "MIT",
   "authors": [
     {
