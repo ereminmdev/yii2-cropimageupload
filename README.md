@@ -18,7 +18,7 @@ public function behaviors()
     return [
         ...
         'avatar' => [
-            'class' => CropImageUploadBehavior::className(),
+            'class' => CropImageUploadBehavior::class,
             'attribute' => 'avatar',
             'scenarios' => ['create', 'update'],
             'placeholder' => '@app/modules/user/assets/images/avatar.jpg',
@@ -40,7 +40,7 @@ View file:
 
 ```php
 <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
-    <?= $form->field($model, 'photo')->widget(CropImageUploadWidget::className()) ?>
+    <?= $form->field($model, 'photo')->widget(CropImageUploadWidget::class) ?>
     <div class="form-group">
         <?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
     </div>
