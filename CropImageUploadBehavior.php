@@ -4,7 +4,7 @@ namespace ereminmdev\yii2\cropimageupload;
 
 use Imagine\Image\Box;
 use Imagine\Image\Point;
-use mongosoft\file\UploadImageBehavior;
+use mohorev\file\UploadImageBehavior;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\imagine\Image;
