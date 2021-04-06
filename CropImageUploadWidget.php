@@ -47,7 +47,7 @@ class CropImageUploadWidget extends InputWidget
 
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function init()
     {
@@ -62,7 +62,7 @@ class CropImageUploadWidget extends InputWidget
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function run()
     {

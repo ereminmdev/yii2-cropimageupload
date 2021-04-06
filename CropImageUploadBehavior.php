@@ -38,7 +38,7 @@ class CropImageUploadBehavior extends UploadImageBehavior
 
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function init()
     {
@@ -48,7 +48,7 @@ class CropImageUploadBehavior extends UploadImageBehavior
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function beforeValidate()
     {
@@ -67,7 +67,7 @@ class CropImageUploadBehavior extends UploadImageBehavior
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function beforeSave()
     {
@@ -92,7 +92,7 @@ class CropImageUploadBehavior extends UploadImageBehavior
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function afterUpload()
     {
