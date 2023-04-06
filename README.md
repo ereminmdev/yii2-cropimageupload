@@ -2,13 +2,13 @@
 
 Image upload for Yii framework.
 
-This widget depend on:
+This widget depends on:
 - https://github.com/mohorev/yii2-upload-behavior
 - http://jcrop.org
 
 ## Install
 
-``composer require ereminmdev/yii-cropimageupload``
+``composer require --prefer-dist ereminmdev/yii-cropimageupload``
 
 ## Use
 
