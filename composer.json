@@ -2,7 +2,7 @@
   "name": "ereminmdev/yii2-cropimageupload",
   "description": "Crop image upload for Yii framework.",
   "keywords": ["yii2","behavior","image upload","crop"],
-  "homepage": "https://bitbucket.org/ereminmdev/yii2-cropimageupload",
+  "homepage": "https://github.com/ereminmdev/yii2-cropimageupload",
   "type": "yii2-extension",
   "license": "MIT",
   "authors": [
@@ -13,7 +13,7 @@
     }
   ],
   "require": {
-    "php": ">=5.4.0",
+    "php": ">=7.4",
     "yiisoft/yii2": "~2.0.1",
     "mohorev/yii2-upload-behavior": "^0.2"
   },

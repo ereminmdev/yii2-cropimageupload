@@ -44,7 +44,7 @@ class CropImageUploadBehavior extends UploadImageBehavior
     {
         parent::init();
 
-        $this->cropped_field = $this->cropped_field !== null ? $this->cropped_field : $this->attribute;
+        $this->cropped_field ??= $this->attribute;
     }
 
     /**
